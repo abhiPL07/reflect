@@ -1,11 +1,8 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"reflect"
-	"strconv"
-	"strings"
 )
 
 type Person struct {
@@ -14,42 +11,30 @@ type Person struct {
 }
 
 func main() {
-	var p Person = Person{
-		Name: "Lal",
-		Age:  30,
+	foo := func() {
+		fmt.Println("Hello")
 	}
-	res, err := JsonEncode(p)
-	if err != nil {
-		fmt.Println(err)
+	foo()
+	refObjTyp := reflect.TypeOf(foo)
+	refObjVal := reflect.ValueOf(foo)
+	refObjKnd := refObjTyp.Kind()
+	refValKnd := refObjVal.Kind()
+	if reflect.DeepEqual(refObjKnd, refValKnd) {
+		fmt.Println("Same")
+	} else {
+		fmt.Println("Different")
 	}
-	fmt.Println(string(res))
-}
+	fmt.Printf("Kind: %v\n", refObjTyp)
+	fmt.Printf("Val: %v\n", refObjVal)
+	fmt.Printf("Kind: %v\n", refObjKnd)
+	fmt.Printf("Obj Kind: %v\n", refValKnd)
+	refObjVal.Call(nil)
 
-func JsonEncode(v interface{}) ([]byte, error) {
-	refObjVal := reflect.ValueOf(v)
-	refObjTyp := reflect.TypeOf(v)
-	buf := bytes.Buffer{}
-	if refObjVal.Kind() != reflect.Struct {
-		return buf.Bytes(), fmt.Errorf("unsupported type: %v", refObjVal.Kind())
-	}
-	pairs := []string{}
-	for i := 0; i < refObjVal.NumField(); i++ {
-		fieldVal := refObjVal.Field(i)
-		fieldTyp := refObjTyp.Field(i)
-		switch fieldVal.Kind() {
-		case reflect.String:
-			strVal := fieldVal.Interface().(string)
-			pairs = append(pairs, `"`+string(fieldTyp.Name)+`": "`+strVal+`"`)
-		case reflect.Int64:
-			intVal := fieldVal.Interface().(int64)
-			// pairs = append(pairs, `"`+string(fieldTyp.Name)+`": `+strconv.FormatInt(intVal, 10)+`"`)
-			pairs = append(pairs, fmt.Sprintf("%s: %s", string(fieldTyp.Name), strconv.FormatInt(intVal, 10)))
-		default:
-			return buf.Bytes(), fmt.Errorf("unsupported type: %v", fieldVal.Kind())
-		}
-	}
-	buf.WriteString("{")
-	buf.WriteString(strings.Join(pairs, " "))
-	buf.WriteString("}")
-	return buf.Bytes(), nil
+	// swapper
+	i := 10
+	j := 70
+	sl := []int{i, 20, 30, 40, 50, 60, j}
+	fu := reflect.Swapper(sl)
+	fu(0, 6)
+	fmt.Println(sl)
 }
