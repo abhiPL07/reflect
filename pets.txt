@@ -7,3 +7,5 @@ Dumbo - Elephant
 Simba - Lion
 Nemo - Fish
 Scar - Lion
+Smallfry - Fish
+Timon - Meerkat
