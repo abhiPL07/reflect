@@ -9,3 +9,4 @@ Nemo - Fish
 Scar - Lion
 Smallfry - Fish
 Timon - Meerkat
+Pumba - Boar
