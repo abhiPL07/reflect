@@ -11,3 +11,4 @@ Smallfry - Fish
 Timon - Meerkat
 Pumba - Boar
 Hachiko - Dog
+Nala - Lion
